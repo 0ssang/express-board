@@ -11,7 +11,12 @@ http
 
         if(path in urlMap){
             // urlMap에 path값으로 매핑된 함수 실행
-            urlMap[path](req, res)
+            try{
+                urlMap[path](req, res)
+            }catch(err){
+                console.log(err)
+                serverError(req, res)
+            }
         } else {
             notFound(req, res)
         }
@@ -20,9 +25,8 @@ http
 
 // 라우팅 이후 처리하는 함수 선언
 const user = (req, res) => {
-    // 쿼리 스트링 데이터를 userInfo에 할당
+    throw Error("!!!")
     const userInfo = url.parse(req.url, true).query
-    // 결괏값으로 이름과 나이 설정
     res.end(`[user] name: ${userInfo.name}, age: ${userInfo.age}`)
 }
 
@@ -39,7 +43,12 @@ const notFound = (req, res) => {
     res.statusCode = 404
     res.end("404 page not found")
 }
-// 맵을 최하단에 작성해야 const로 선언한 변수들의 초기화 에러를 방지할 수 있음
+
+const serverError = (req, res) => {
+    res.statusCode = 500
+    res.end("500 server error")
+}
+
 const urlMap = {
     "/": (req, res) => res.end("HOME"),
     "/user": user,
