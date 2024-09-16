@@ -4,7 +4,7 @@ const app = express()
 const port = 3000
 
 app.listen(port, () => {
-    console.log("express로 라어투 리팩터링하기")
+    console.log("express로 라우터 리팩터링하기")
 })
 
 app.get("/", (_, res) => res.end("HOME"))
