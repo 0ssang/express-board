@@ -12,15 +12,22 @@ const client = new MongoClient(uri, {
 });
 
 async function run() {
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
-        // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
+    await client.connect();
+    // admin DB 인스턴스
+    const adminDB = client.db('test').admin();
+    const listDatabases = await adminDB.listDatabases();
+    console.log(listDatabases);
+    return "OK"
+    // try {
+    //     // Connect the client to the server	(optional starting in v4.7)
+    //     await client.connect();
+    //     // Send a ping to confirm a successful connection
+    //     const adminDB = client.db("test").admin();
+    //     const listDatabases = await adminDB.listDatabases()
+    //     console.log(listDatabases);
+    // } finally {
+    //     // Ensures that the client will close when you finish/error
+    //     await client.close();
+    // }
 }
-run().catch(console.dir);
+run().then(console.log).catch(console.error).finally(() => client.close());
