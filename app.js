@@ -12,7 +12,13 @@ app.set("views", __dirname + "/views")
 
 // 라우터 설정
 app.get("/", (req, res) => {
+    // home : 템플릿 파일 이름 => home.haldlebars
     res.render("home", {title: "테스트 게시판"})
+})
+
+app.get("/write", (req, res) => {
+    // write : 템플릿 파일 이름 => write.haldlebars
+    res.render("write", {title: "테스트 게시판"})
 })
 
 app.listen(3000)
