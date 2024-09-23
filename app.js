@@ -23,9 +23,23 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 // 라우터 설정
-app.get("/", (req, res) => {
-    // home : 템플릿 파일 이름 => home.haldlebars
-    res.render("home", {title: "테스트 게시판"})
+// 리스트 페이지
+app.get("/", async (req, res) => {
+    // 현재 페이지 데이터
+    const page = parseInt(req.query.page) || 1
+    // 검색어 데이터
+    const search = req.query.search || ""
+    try{
+        // postService.list 에서 글 목록과 페이지네이터를 가져옴
+        const [posts, paginator] = await postService.list(collection, page, search)
+
+        // 리스트 페이지 렌더링
+        res.render("home", {title: "테스트 게시판", search, paginator, posts})
+    } catch (error) {
+        // 에러가 나는 경우는 빈 값으로 렌더링
+        console.log(error)
+        res.render("home", {title: "테스트 게시판"})
+    }
 })
 
 app.get("/write", (req, res) => {
