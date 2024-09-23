@@ -5,7 +5,12 @@ const app = express()
 const mongodbConnection = require("./configs/mongodb-connection")
 
 // template engine 등록
-app.engine("handlebars", handlebars.engine())
+app.engine(
+    "handlebars",
+    handlebars.create({
+        helpers: require("./configs/handlebars-helpers"),
+    }).engine,
+)
 
 // 웹 페이지 로드 시 사용할 템플릿 엔진 설정
 app.set("view engine", "handlebars")
