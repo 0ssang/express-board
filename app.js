@@ -3,6 +3,7 @@ const handlebars = require("express-handlebars")
 const app = express()
 // mongoDB 연결 함수
 const mongodbConnection = require("./configs/mongodb-connection")
+const postService = require("./services/post-service")
 
 // template engine 등록
 app.engine(
@@ -36,6 +37,15 @@ app.get("/detail/:id", async (req, res) => {
     res.render("detail", {
         title: "테스트 게시판",
     })
+})
+
+// 글쓰기
+app.post("/write", async (req, res) => {
+    const post = req.body
+    // 글쓰기 후 결과 반환
+    const result = await postService.writePost(collection, post);
+    // 생성된 도큐면트의 _id를 사용해 상세페이지로 이동
+    res.redirect(`/detail/${result.insertedId}`)
 })
 
 // Mongodb 라이브러리에서 내부 커넥션 풀을 관리하고 있으므로 글로벌 변수로 사용해도 문제가 없음
