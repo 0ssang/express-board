@@ -1,6 +1,8 @@
 const express = require("express")
 const handlebars = require("express-handlebars")
 const app = express()
+// mongoDB 연결 함수
+const mongodbConnection = require("./configs/mongodb-connection")
 
 // template engine 등록
 app.engine("handlebars", handlebars.engine())
@@ -27,4 +29,13 @@ app.get("/detail/:id", async (req, res) => {
     })
 })
 
-app.listen(3000)
+// Mongodb 라이브러리에서 내부 커넥션 풀을 관리하고 있으므로 글로벌 변수로 사용해도 문제가 없음
+let collection
+app.listen(3000, async () => {
+    console.log("Server started")
+    // mongodbConnection()의 결과는 mongoClient
+    const mongoClient = await mongodbConnection()
+    //  mongoClient.db()로 DB 선택 collection()으로 컬렉션 선택 후 collection에 할당
+    collection = mongoClient.db().collection("post")
+    console.log("MongoDB connected")
+})
