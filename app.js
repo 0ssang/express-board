@@ -17,6 +17,10 @@ app.set("view engine", "handlebars")
 // 뷰 디렉토리 설정
 app.set("views", __dirname + "/views")
 
+// req.body와 POST 요청을 해석하기 위한 설정
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
 // 라우터 설정
 app.get("/", (req, res) => {
     // home : 템플릿 파일 이름 => home.haldlebars
