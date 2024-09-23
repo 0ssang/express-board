@@ -55,6 +55,6 @@ app.listen(3000, async () => {
     // mongodbConnection()의 결과는 mongoClient
     const mongoClient = await mongodbConnection()
     //  mongoClient.db()로 DB 선택 collection()으로 컬렉션 선택 후 collection에 할당
-    collection = mongoClient.db().collection("post")
+    collection = mongoClient.db('board').collection("post")
     console.log("MongoDB connected")
 })
