@@ -24,24 +24,47 @@ placeholder="검색어를 입력하세요." />
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><a href="/detail/">타이틀</a></td>
-                <td align="center">작성자이름</td>
-                <td align="center">99999</td>
-                <td align="center">2024.09.20</td>
-            </tr>
+            <!--게시글 데이터 표시 -->
+            {{#each posts}}
+                <tr>
+                    <!-- 상세페이지 링크 -->
+                    <td><a href="/detail/{{_id}}">{{title}}</a></td>
+                    <td>{{writer}}</td>
+                    <td>{{hits}}</td>
+                    <!-- dateString 커스텀 헬퍼 함수 사용 -->
+                    <td>{{dateString createdDt}}</td>
+                </tr>
+            {{/each}}
         </tbody>
     </table>
 </div>
 
 <!-- 페이징 영역 -->
 <div>
-    <a>&lt;&lt;</a>
+    <!-- with 내장 헬퍼 함수 사용 -->
+    {{#with paginator}}
+    <!-- @root 서버의 원본 참조 시 사용 -->
+    <a href="/?page=1&search={{@root.search}}">&lt;&lt;</a>
+    {{#if hasPrev}}
+    <a href="/?page={{prevPage}}&search={{@root.search}}">&lt;</a>
+    <!-- 1페이지 인 경우 이전 페이지가 없으므로 링크가 없음 -->
+    {{else}}
     <a>&lt;</a>
-    <a>1</a>
-    <a>2</a>
-    <a>3</a>
-    <a>4</a>
+    {{/if}}
+    {{#each pageList}}
+    <!-- eq 커스텀 헬퍼 함수 사용-->
+    {{#if (eq this @root.paginator.page)}}
+    <a>{{this}}</a>
+    {{else}}
+    <a href="/?page={{this}}&search={{@root.search}}">{{this}}</a>
+    {{/if}}
+    {{/each}}
+    {{#if hasNext}}
+    <a href="/?page={{nextPage}}&search={{@root.search}}">&gt;</a>
+    <!-- 마지막 페이지 인 경우 이전 페이지가 없으므로 링크가 삭제 -->
+    {{else}}
     <a>&gt;</a>
-    <a>&gt;&gt;</a>
+    {{/if}}
+    <a href="/?page={{lastPage}}&search={{@root.search}}">&gt;&gt;</a>
+    {{/with}}
 </div>

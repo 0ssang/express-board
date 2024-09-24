@@ -1,3 +1,5 @@
+const paginator = require("../utils/paginator")
+
 // 글 리스트
 async function list(collection, page, search){
     const perPage = 10
