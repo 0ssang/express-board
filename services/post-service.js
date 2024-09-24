@@ -1,4 +1,5 @@
 const paginator = require("../utils/paginator")
+const { ObjectId } = require("mongodb")
 
 // 글 리스트
 async function list(collection, page, search){
@@ -27,8 +28,25 @@ async function writePost(collection, post){
     return collection.insertOne(post)
 }
 
+// 프로젝션 옵션 :  password는 노출 할 필요가 없으므로 결과 값으로 가져오지 않음
+const projectionOption = {
+    projection: {
+        // 프로젝션 결과 값에서 일부만 가져올 때 사용
+        password: 0,
+        "comments.password": 0
+    },
+}
+
+// 게시글 상세보기 서비스
+async function getDetailPost(collection, id){
+    // mongodb Collection의 findOneAndUpdate() 함수 사용
+    // 게시글을 읽을 때 마다 hits 1 증가 (조회수)
+    return await collection.findOneAndUpdate({ _id: ObjectId(id) }, { $inc: { hits: 1 } }, projectionOption)
+}
+
 // require()로 파일을 임포트 시 외부로 노출하는 객체
 module.exports = {
     list,
     writePost,
+    getDetailPost,
 }
