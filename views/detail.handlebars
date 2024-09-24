@@ -16,11 +16,12 @@
 
 <section>
     <div>
-        <h3>3개의 댓글이 있습니다.</h3>
+        <h3>{{lengthOfList comments}}개의 댓글이 있습니다.</h3>
     </div>
 
-    <!-- 댓글 작성 폼-->
+    <!-- 댓글 작성 시 API 호출 정보-->
     <form method="post" action="/write-comment">
+        <input type="hidden" name="id" value="{{_id}}" />
         <div>
             <div>
                 <input type="text" name="name" placeholder="이름" />
@@ -36,18 +37,20 @@
 
 <!-- 댓글 표시 영역-->
 <section>
+    {{#each comments}}
     <div>
         <div>
-            작성자 : <b>댓글 작성자</b>
+            작성자 : <b>{{name}}</b>
         </div>
         <div>
-            작성일시 : 2024-09-22 00:00:00
-            <button onclick="deleteComment('1')">삭제</button>
+            작성일시 : {{dateString createdDt}}
+            <button onclick="deleteComment('{{idx}}')">삭제</button>
         </div>
     </div>
     <div>
         <pre>{{comment}}</pre>
     </div>
+    {{/each}}
 </section>
 {{/with}}
 <footer>
