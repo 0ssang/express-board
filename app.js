@@ -4,6 +4,7 @@ const app = express()
 // mongoDB 연결 함수
 const mongodbConnection = require("./configs/mongodb-connection")
 const postService = require("./services/post-service")
+const {ObjectId} = require("mongodb")
 
 // template engine 등록
 app.engine(
@@ -70,6 +71,22 @@ app.post("/modify/", async (req, res) => {
     // 업데이트 결과
     const result = postService.updatePost(collection, id, post)
     res.redirect(`/detail/${id}`)
+})
+
+// 게시글 삭제
+app.delete("/delete", async (req, res) => {
+    const {id, password} = req.body
+    try{
+        const result = await collection.deleteOne({ _id: ObjectId(id), password: password })
+        if(result.deletedCount !== 1){
+            console.log("삭제 실패")
+            return res.json({ isSuccess: false})
+        }
+        return res.json({ isSuccess: true})
+    } catch (error) {
+        console.log(error)
+        return res.json({ isSuccess: false })
+    }
 })
 
 // 상세 페이지로 이동
