@@ -42,9 +42,35 @@ app.get("/", async (req, res) => {
     }
 })
 
+// 글 쓰기 페이지 이동 mode는 create
 app.get("/write", (req, res) => {
     // write : 템플릿 파일 이름 => write.haldlebars
-    res.render("write", {title: "테스트 게시판"})
+    res.render("write", {title: "테스트 게시판", mode: "create"})
+})
+
+// 글 수정 페이지로 이동 mode는 modify
+app.get("/modify/:id", async (req, res) => {
+    // getPostById() 함수로 게시글 데이터 받아옴
+    const post = await postService.getPostById(collection, req.params.id)
+    console.log(post)
+    res.render("write", { title: "테스트 게시판", mode: "modify", post })
+})
+
+// 게시글 수정 API
+app.post("/modify/", async (req, res) => {
+    const { id, title, writer, password, content } = req.body
+
+    const post = {
+        title,
+        writer,
+        password,
+        content,
+        createdDt: new Date().toISOString(),
+    }
+
+    // 업데이트 결과
+    const result = postService.updatePost(collection, id, post)
+    res.redirect(`/detail/${id}`)
 })
 
 // 상세 페이지로 이동
