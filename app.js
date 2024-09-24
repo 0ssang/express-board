@@ -6,6 +6,17 @@ const mongodbConnection = require("./configs/mongodb-connection")
 const postService = require("./services/post-service")
 const {ObjectId} = require("mongodb")
 
+// Mongodb 라이브러리에서 내부 커넥션 풀을 관리하고 있으므로 글로벌 변수로 사용해도 문제가 없음
+let collection
+app.listen(3000, async () => {
+    console.log("Server started")
+    // mongodbConnection()의 결과는 mongoClient
+    const mongoClient = await mongodbConnection()
+    //  mongoClient.db()로 DB 선택 collection()으로 컬렉션 선택 후 collection에 할당
+    collection = mongoClient.db('board').collection("post")
+    console.log("MongoDB connected")
+})
+
 // template engine 등록
 app.engine(
     "handlebars",
@@ -177,15 +188,4 @@ app.delete("/delete-comment", async (req, res) => {
     post.comments = post.comments.filter((comment) => comment.idx != idx)
     postService.updatePost(collection, id, post)
     return res.json({isSuccess: true})
-})
-
-// Mongodb 라이브러리에서 내부 커넥션 풀을 관리하고 있으므로 글로벌 변수로 사용해도 문제가 없음
-let collection
-app.listen(3000, async () => {
-    console.log("Server started")
-    // mongodbConnection()의 결과는 mongoClient
-    const mongoClient = await mongodbConnection()
-    //  mongoClient.db()로 DB 선택 collection()으로 컬렉션 선택 후 collection에 할당
-    collection = mongoClient.db('board').collection("post")
-    console.log("MongoDB connected")
 })
