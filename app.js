@@ -52,7 +52,6 @@ app.get("/write", (req, res) => {
 app.get("/modify/:id", async (req, res) => {
     // getPostById() 함수로 게시글 데이터 받아옴
     const post = await postService.getPostById(collection, req.params.id)
-    console.log(post)
     res.render("write", { title: "테스트 게시판", mode: "modify", post })
 })
 

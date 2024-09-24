@@ -51,7 +51,7 @@ async function getPostByIdAndPassword(collection, {id, password}){
 
 // id로 데이터 불러오기
 async function getPostById(collection, id){
-    return await collection.findOne({ _id: ObjectId(id), projectionOption})
+    return await collection.findOne({ _id: ObjectId(id)}, projectionOption)
 }
 
 // 게시글 수정
@@ -71,5 +71,5 @@ module.exports = {
     getDetailPost,
     getPostById,
     getPostByIdAndPassword,
-    updatePost
+    updatePost,
 }
